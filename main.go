@@ -1,8 +1,59 @@
 package main
 
-import "fmt"
+import (
+	"bufio"
+	"fmt"
+	"io"
+	"net/http"
+	"os"
+	"strconv"
+)
 
-func main()  {
-	fmt.Print("blah")
-	
+func main() {
+	rawDataFilename := "elevation.txt"
+	getRawDataFromWeb(rawDataFilename)
+	elevationCounter := countElevations(rawDataFilename)
+	fmt.Print(elevationCounter)
+
+}
+
+func countElevations(rawDataFilename string) int {
+	elevationCounter := 0
+	rawDataFile, err := os.Open(rawDataFilename)
+	if nil == err {
+		scanner := bufio.NewScanner(rawDataFile)
+		scanner.Scan()
+
+		previousValue, conversionError := strconv.Atoi(scanner.Text())
+		if conversionError == nil {
+			for scanner.Scan() {
+				nextValue, conversionError := strconv.Atoi(scanner.Text())
+				if nil == conversionError {
+					valToAdd := 0
+					if previousValue < nextValue {
+						valToAdd = 1
+					}
+					elevationCounter += valToAdd
+					previousValue = nextValue
+				}
+			}
+		}
+
+	}
+	return elevationCounter
+}
+
+func getRawDataFromWeb(rawDataFilename string) {
+	client := &http.Client{}
+	req, _ := http.NewRequest("GET", "https://adventofcode.com/2021/day/1/input", nil)
+	req.Header.Set("cookie", "session=53616c7465645f5f6a5d552e712b707cdf60b99ae38583cfc51dbf519359b7597a3a35a925e91d934b334e8cbfc5b7af")
+	result, err := client.Do(req)
+
+	if err == nil {
+		outFile, errFile := os.Create(rawDataFilename)
+		if errFile == nil {
+			defer outFile.Close()
+			_, _ = io.Copy(outFile, result.Body)
+		}
+	}
 }
