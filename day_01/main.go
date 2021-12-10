@@ -1,4 +1,4 @@
-package main
+package day_01
 
 import (
 	"bufio"
@@ -11,13 +11,13 @@ import (
 
 func main() {
 	rawDataFilename := "elevation.txt"
-	getRawDataFromWeb(rawDataFilename)
-	elevationCounter := countElevations(rawDataFilename)
+	GetRawDataFromWeb(rawDataFilename)
+	elevationCounter := CountElevations(rawDataFilename)
 	fmt.Print(elevationCounter)
 
 }
 
-func countElevations(rawDataFilename string) int {
+func CountElevations(rawDataFilename string) int {
 	elevationCounter := 0
 	rawDataFile, err := os.Open(rawDataFilename)
 	if nil == err {
@@ -43,7 +43,7 @@ func countElevations(rawDataFilename string) int {
 	return elevationCounter
 }
 
-func getRawDataFromWeb(rawDataFilename string) {
+func GetRawDataFromWeb(rawDataFilename string) {
 	client := &http.Client{}
 	req, _ := http.NewRequest("GET", "https://adventofcode.com/2021/day/1/input", nil)
 	req.Header.Set("cookie", "session=53616c7465645f5f6a5d552e712b707cdf60b99ae38583cfc51dbf519359b7597a3a35a925e91d934b334e8cbfc5b7af")
