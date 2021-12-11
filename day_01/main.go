@@ -12,7 +12,7 @@ func Main() {
 	sliceSumIncrease := 0
 	const sliceSize = 3
 	rawDataFilename := "elevation.txt"
-	helpers.GetRawDataFromWeb(rawDataFilename)
+	helpers.GetRawDataFromWeb(rawDataFilename, "https://adventofcode.com/2021/day/1/input")
 	elevationMap := ReadElevationMapIntoSlice(rawDataFilename)
 
 	for i, _ := range elevationMap {
