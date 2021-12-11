@@ -11,10 +11,8 @@ import (
 
 func main() {
 	rawDataFilename := "elevation.txt"
-	GetRawDataFromWeb(rawDataFilename)
-	elevationCounter := CountElevations(rawDataFilename)
+	elevationCounter := ReadElevationMapIntoSlice(rawDataFilename)
 	fmt.Print(elevationCounter)
-
 }
 
 func CountElevations(rawDataFilename string) int {
@@ -56,4 +54,28 @@ func GetRawDataFromWeb(rawDataFilename string) {
 			_, _ = io.Copy(outFile, result.Body)
 		}
 	}
+}
+
+
+func ReadElevationMapIntoSlice(rawDataFilename string) []int {
+	elevationMap := []int{}
+	rawDataFile, err := os.Open(rawDataFilename)
+	if nil == err {
+		scanner := bufio.NewScanner(rawDataFile)
+		for scanner.Scan() {
+			value, conversionError := strconv.Atoi(scanner.Text())
+			if nil == conversionError {
+				elevationMap = append(elevationMap, value)
+			}
+		}
+	}
+	return elevationMap
+}
+
+func SumSlice(slice []int) int{
+	sum := 0
+	for _, val := range slice{
+		sum += val
+	}
+	return sum
 }
