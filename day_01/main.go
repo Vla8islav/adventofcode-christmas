@@ -2,7 +2,6 @@ package day_01
 
 import (
 	"bufio"
-	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -10,9 +9,27 @@ import (
 )
 
 func main() {
+	sliceSumIncrease := 0
+	const sliceSize = 3
 	rawDataFilename := "elevation.txt"
-	elevationCounter := ReadElevationMapIntoSlice(rawDataFilename)
-	fmt.Print(elevationCounter)
+	elevationMap := ReadElevationMapIntoSlice(rawDataFilename)
+
+	for i, _ := range elevationMap {
+		firstSliceLeftIndex := 0 + i
+		firstSliceRightIndex := sliceSize - 1 + i
+		if firstSliceRightIndex < len(elevationMap) {
+			firstSlice := elevationMap[firstSliceLeftIndex : firstSliceRightIndex+1]
+			secondSlice := elevationMap[firstSliceLeftIndex+1 : firstSliceRightIndex+1+1]
+			firstSliceSum := SumSlice(firstSlice)
+			secondSliceSum := SumSlice(secondSlice)
+			if firstSliceSum < secondSliceSum {
+				sliceSumIncrease++
+			}
+		}
+
+	}
+
+	println(sliceSumIncrease)
 }
 
 func CountElevations(rawDataFilename string) int {
@@ -56,7 +73,6 @@ func GetRawDataFromWeb(rawDataFilename string) {
 	}
 }
 
-
 func ReadElevationMapIntoSlice(rawDataFilename string) []int {
 	elevationMap := []int{}
 	rawDataFile, err := os.Open(rawDataFilename)
@@ -72,9 +88,9 @@ func ReadElevationMapIntoSlice(rawDataFilename string) []int {
 	return elevationMap
 }
 
-func SumSlice(slice []int) int{
+func SumSlice(slice []int) int {
 	sum := 0
-	for _, val := range slice{
+	for _, val := range slice {
 		sum += val
 	}
 	return sum
