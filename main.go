@@ -8,10 +8,10 @@ import (
 )
 
 func main() {
-	rawDataFilename := "gamma_epsion_sample.txt"
+	rawDataFilename := "gamma_epsion.txt"
 	// helpers.GetRawDataFromWeb(rawDataFilename, "https://adventofcode.com/2021/day/3/input")
 	// const exampleString = "101011011110"
-	const exampleString = "11110"
+	const exampleString = "110100101110"
 	expected_string_length := len(exampleString)
 	number_count := 0
 	gamma_one_frequency := make([]int, expected_string_length)
