@@ -48,11 +48,11 @@ func main() {
 		}
 	}
 
-	fmt.Printf("%05s\n", strconv.FormatInt(int64(gamma), 2))
-	fmt.Printf("%05s\n", strconv.FormatInt(int64(epsilon), 2))
+	fmt.Printf("%012s\n", strconv.FormatInt(int64(gamma), 2))
+	fmt.Printf("%012s\n", strconv.FormatInt(int64(epsilon), 2))
 	fmt.Printf("gamma %d epsilon %d", gamma, epsilon)
 
-	println(gamma*epsilon)
+	println(int64(gamma)*int64(epsilon))
 
 }
 
