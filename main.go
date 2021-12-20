@@ -47,11 +47,20 @@ func calculateTendency(numbersArray map[string]bool, dominantValue int) []int {
 	return tendency
 }
 
-func printRemaining(numbersArray map[string]bool) {
+func getRemaining(numbersArray map[string]bool) []string {
+	retval := make([]string, 0)
 	for k, v := range numbersArray {
 		if v {
-			println(k)
+			retval = append(retval, k)
 		}
+	}
+	return retval
+}
+
+func printRemaining(numbersArray map[string]bool) {
+	remaining := getRemaining(numbersArray)
+	for _, v := range remaining {
+		println(v)
 	}
 }
 
@@ -60,19 +69,13 @@ func main() {
 	// const exampleString = "101011011110"
 	numbersArray := extractBinaryNumbers(rawDataFilename, exampleString)
 
+	oxygenAnswer := ""
 	oxygenFlagMap := make(map[string]bool)
 	for _, key := range numbersArray {
 		oxygenFlagMap[key] = true
 	}
-
 	oxygenRemainingNumberCount := len(numbersArray)
-
 	for position, _ := range numbersArray[0] {
-		println("Iteration")
-		println(position)
-		println("")
-		printRemaining(oxygenFlagMap)
-		println("")
 		numbersTendency := calculateTendency(oxygenFlagMap, 1)
 		for _, binaryNumberString := range numbersArray {
 			if oxygenFlagMap[binaryNumberString] {
@@ -91,7 +94,18 @@ func main() {
 				}
 			}
 		}
+		println("Iteration")
+		println(position)
+		println("")
+		printRemaining(oxygenFlagMap)
+		println("")
+		if oxygenRemainingNumberCount == 1 {
+			oxygenAnswer = getRemaining(oxygenFlagMap)[0]
+
+		}
 	}
+	println("Answer:")
+	println(oxygenAnswer)
 
 }
 
