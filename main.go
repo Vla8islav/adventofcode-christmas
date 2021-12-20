@@ -6,7 +6,10 @@ import (
 	"os"
 )
 
-var exampleString = "110100101110"
+// var rawDataFilename string = "gamma_epsion.txt"
+// var exampleString = "110100101110"
+var rawDataFilename string = "gamma_epsion_sample.txt"
+var exampleString = "00100"
 var expected_string_length = len(exampleString)
 
 func calculateFrequency(numbersArray map[string]bool) []int {
@@ -23,37 +26,36 @@ func calculateFrequency(numbersArray map[string]bool) []int {
 	return onesFrequency
 }
 
-func calculateTendency(numbersArray map[string]bool) []int {
+func calculateTendency(numbersArray map[string]bool, dominantValue int) []int {
 	enabledNumberLength := len(numbersArray)
-	for _, flag := range numbersArray{
-		if !flag{
+	for _, flag := range numbersArray {
+		if !flag {
 			enabledNumberLength--
 		}
 	}
 	freqArray := calculateFrequency(numbersArray)
 	tendency := make([]int, expected_string_length)
 	for i, frequency := range freqArray {
-		if frequency > enabledNumberLength/2 {
+		numberOfOnes := frequency
+		numberOfZeros := enabledNumberLength - frequency
+		if numberOfOnes > numberOfZeros {
 			tendency[i] = 1
+		} else if numberOfOnes == numberOfZeros {
+			tendency[i] = dominantValue
 		}
 	}
 	return tendency
 }
 
-func chooseOxygenFromTwoOrLess(possibleNumbers []string, comparePosition int) string{
-	if len(possibleNumbers) == 1{
-		return possibleNumbers[0]
+func printRemaining(numbersArray map[string]bool) {
+	for k, v := range numbersArray {
+		if v {
+			println(k)
+		}
 	}
-	if len(possibleNumbers) == 2{
-		firstNumberIndicator := possibleNumbers[0][comparePosition]
-		secondNumberIndicator := possibleNumbers[1][comparePosition]
-
-	}
-
 }
 
 func main() {
-	rawDataFilename := "gamma_epsion.txt"
 	// helpers.GetRawDataFromWeb(rawDataFilename, "https://adventofcode.com/2021/day/3/input")
 	// const exampleString = "101011011110"
 	numbersArray := extractBinaryNumbers(rawDataFilename, exampleString)
@@ -63,33 +65,33 @@ func main() {
 		oxygenFlagMap[key] = true
 	}
 
-	oxygenNumber := ""
 	oxygenRemainingNumberCount := len(numbersArray)
 
 	for position, _ := range numbersArray[0] {
-		numbersTendency := calculateTendency(oxygenFlagMap)
-		print(numbersTendency)
+		println("Iteration")
+		println(position)
+		println("")
+		printRemaining(oxygenFlagMap)
+		println("")
+		numbersTendency := calculateTendency(oxygenFlagMap, 1)
 		for _, binaryNumberString := range numbersArray {
 			if oxygenFlagMap[binaryNumberString] {
 				expectedNumber := 0
-				if numbersTendency[position] == '1'{
+				if numbersTendency[position] == 1 {
 					expectedNumber = 1
 				}
 				actualNumber := 0
-				if binaryNumberString[position] == '1'{
+				if binaryNumberString[position] == '1' {
 					actualNumber = 1
 				}
-				
+
 				if expectedNumber != actualNumber {
 					oxygenFlagMap[binaryNumberString] = false
 					oxygenRemainingNumberCount--
-
 				}
 			}
 		}
 	}
-
-
 
 }
 
