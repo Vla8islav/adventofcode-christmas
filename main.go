@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strconv"
 )
 
 // var rawDataFilename string = "gamma_epsion.txt"
@@ -69,14 +70,37 @@ func main() {
 	// const exampleString = "101011011110"
 	numbersArray := extractBinaryNumbers(rawDataFilename, exampleString)
 
-	oxygenAnswer := ""
+	oxygenAnswer := getOxygen(numbersArray, 1)
+	println("Answer:")
+	println(oxygenAnswer)
+	oxygenNumberInt := convertToInt(oxygenAnswer)
+
+	fmt.Printf("%012s\n", strconv.FormatInt(int64(oxygenNumberInt), 2))
+	fmt.Printf("Answer O2 in numerics %d", oxygenNumberInt)
+
+}
+
+func convertToInt(oxygenAnswer string) uint16 {
+	number := uint16(0)
+
+	leftShift := expected_string_length - 1
+	for i, value := range oxygenAnswer {
+		if value == '1' {
+			number = number | ((0x0001 << leftShift) >> i)
+		}
+	}
+	return number
+}
+
+func getOxygen(numbersArray []string, dominantTendency int) string {
+	var oxygenAnswer string
 	oxygenFlagMap := make(map[string]bool)
 	for _, key := range numbersArray {
 		oxygenFlagMap[key] = true
 	}
 	oxygenRemainingNumberCount := len(numbersArray)
 	for position, _ := range numbersArray[0] {
-		numbersTendency := calculateTendency(oxygenFlagMap, 1)
+		numbersTendency := calculateTendency(oxygenFlagMap, dominantTendency)
 		for _, binaryNumberString := range numbersArray {
 			if oxygenFlagMap[binaryNumberString] {
 				expectedNumber := 0
@@ -104,9 +128,7 @@ func main() {
 
 		}
 	}
-	println("Answer:")
-	println(oxygenAnswer)
-
+	return oxygenAnswer
 }
 
 func extractBinaryNumbers(rawDataFilename string, exampleString string) []string {
