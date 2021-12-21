@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"strconv"
 )
 
 // var rawDataFilename string = "gamma_epsion.txt"
@@ -12,6 +11,25 @@ import (
 var rawDataFilename string = "gamma_epsion_sample.txt"
 var exampleString = "00100"
 var expected_string_length = len(exampleString)
+
+func main() {
+	// helpers.GetRawDataFromWeb(rawDataFilename, "https://adventofcode.com/2021/day/3/input")
+	// const exampleString = "101011011110"
+	numbersArray := extractBinaryNumbers(rawDataFilename, exampleString)
+
+	// oxygenAnswer := getOxygen(numbersArray, 1, false)
+	co2Answer := getOxygen(numbersArray, 0, true)
+	// println("Oxygen answer:")
+	// println(oxygenAnswer)
+	println("Co2 answer:")
+	println(co2Answer)
+	// oxygenNumberInt := convertToInt(oxygenAnswer)
+	// co2NumberInt := convertToInt(co2Answer)
+
+	// fmt.Printf("%012s\t%012s\n", strconv.FormatInt(int64(oxygenNumberInt), 2), strconv.FormatInt(int64(co2NumberInt), 2))
+	// fmt.Printf("Answer O2 in numerics %d co2 in numerics %d", oxygenNumberInt, co2NumberInt)
+
+}
 
 func calculateFrequency(numbersArray map[string]bool) []int {
 	onesFrequency := make([]int, expected_string_length)
@@ -27,7 +45,7 @@ func calculateFrequency(numbersArray map[string]bool) []int {
 	return onesFrequency
 }
 
-func calculateTendency(numbersArray map[string]bool, dominantValue int) []int {
+func calculateTendency(numbersArray map[string]bool, dominantValue int, chooseLeast bool) []int {
 	enabledNumberLength := len(numbersArray)
 	for _, flag := range numbersArray {
 		if !flag {
@@ -43,6 +61,11 @@ func calculateTendency(numbersArray map[string]bool, dominantValue int) []int {
 			tendency[i] = 1
 		} else if numberOfOnes == numberOfZeros {
 			tendency[i] = dominantValue
+			continue
+		}
+		
+		if chooseLeast {
+			tendency[i] = flipNumber(tendency[i])
 		}
 	}
 	return tendency
@@ -65,21 +88,6 @@ func printRemaining(numbersArray map[string]bool) {
 	}
 }
 
-func main() {
-	// helpers.GetRawDataFromWeb(rawDataFilename, "https://adventofcode.com/2021/day/3/input")
-	// const exampleString = "101011011110"
-	numbersArray := extractBinaryNumbers(rawDataFilename, exampleString)
-
-	oxygenAnswer := getOxygen(numbersArray, 1)
-	println("Answer:")
-	println(oxygenAnswer)
-	oxygenNumberInt := convertToInt(oxygenAnswer)
-
-	fmt.Printf("%012s\n", strconv.FormatInt(int64(oxygenNumberInt), 2))
-	fmt.Printf("Answer O2 in numerics %d", oxygenNumberInt)
-
-}
-
 func convertToInt(oxygenAnswer string) uint16 {
 	number := uint16(0)
 
@@ -92,7 +100,27 @@ func convertToInt(oxygenAnswer string) uint16 {
 	return number
 }
 
-func getOxygen(numbersArray []string, dominantTendency int) string {
+func flipTendency(tendency []int) {
+	for i, _ := range tendency {
+		if tendency[i] == 1 {
+			tendency[i] = 0
+		}
+		if tendency[i] == 0 {
+			tendency[i] = 1
+		}
+	}
+}
+func flipNumber(number int) int {
+	if number == 1 {
+		return 0
+	}
+	if number == 0 {
+		return 1
+	}
+	return number
+}
+
+func getOxygen(numbersArray []string, dominantTendency int, chooseLeast bool) string {
 	var oxygenAnswer string
 	oxygenFlagMap := make(map[string]bool)
 	for _, key := range numbersArray {
@@ -100,13 +128,10 @@ func getOxygen(numbersArray []string, dominantTendency int) string {
 	}
 	oxygenRemainingNumberCount := len(numbersArray)
 	for position, _ := range numbersArray[0] {
-		numbersTendency := calculateTendency(oxygenFlagMap, dominantTendency)
+		numbersTendency := calculateTendency(oxygenFlagMap, dominantTendency, chooseLeast)
 		for _, binaryNumberString := range numbersArray {
 			if oxygenFlagMap[binaryNumberString] {
-				expectedNumber := 0
-				if numbersTendency[position] == 1 {
-					expectedNumber = 1
-				}
+				expectedNumber := numbersTendency[position]
 				actualNumber := 0
 				if binaryNumberString[position] == '1' {
 					actualNumber = 1
@@ -118,17 +143,21 @@ func getOxygen(numbersArray []string, dominantTendency int) string {
 				}
 			}
 		}
-		println("Iteration")
-		println(position)
-		println("")
-		printRemaining(oxygenFlagMap)
-		println("")
+		printIteration(position, oxygenFlagMap)
 		if oxygenRemainingNumberCount == 1 {
 			oxygenAnswer = getRemaining(oxygenFlagMap)[0]
-
+			break
 		}
 	}
 	return oxygenAnswer
+}
+
+func printIteration(position int, oxygenFlagMap map[string]bool) {
+	println("Iteration")
+	println(position)
+	println("")
+	printRemaining(oxygenFlagMap)
+	println("")
 }
 
 func extractBinaryNumbers(rawDataFilename string, exampleString string) []string {
