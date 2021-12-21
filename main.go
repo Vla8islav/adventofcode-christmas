@@ -9,8 +9,8 @@ import (
 
 // var rawDataFilename string = "gamma_epsion.txt"
 // var exampleString = "110100101110"
-var rawDataFilename string = "gamma_epsion_sample.txt"
-var exampleString = "00100"
+var rawDataFilename string = "gamma_epsion.txt"
+var exampleString = "110110101111"
 var expected_string_length = len(exampleString)
 
 func main() {
