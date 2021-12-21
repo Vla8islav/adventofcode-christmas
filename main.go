@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strconv"
 )
 
 // var rawDataFilename string = "gamma_epsion.txt"
@@ -17,17 +18,18 @@ func main() {
 	// const exampleString = "101011011110"
 	numbersArray := extractBinaryNumbers(rawDataFilename, exampleString)
 
-	// oxygenAnswer := getOxygen(numbersArray, 1, false)
+	oxygenAnswer := getOxygen(numbersArray, 1, false)
 	co2Answer := getOxygen(numbersArray, 0, true)
-	// println("Oxygen answer:")
-	// println(oxygenAnswer)
+	println("Oxygen answer:")
+	println(oxygenAnswer)
 	println("Co2 answer:")
 	println(co2Answer)
-	// oxygenNumberInt := convertToInt(oxygenAnswer)
-	// co2NumberInt := convertToInt(co2Answer)
+	oxygenNumberInt := convertToInt(oxygenAnswer)
+	co2NumberInt := convertToInt(co2Answer)
 
-	// fmt.Printf("%012s\t%012s\n", strconv.FormatInt(int64(oxygenNumberInt), 2), strconv.FormatInt(int64(co2NumberInt), 2))
-	// fmt.Printf("Answer O2 in numerics %d co2 in numerics %d", oxygenNumberInt, co2NumberInt)
+	fmt.Printf("%012s\t%012s\n", strconv.FormatInt(int64(oxygenNumberInt), 2), strconv.FormatInt(int64(co2NumberInt), 2))
+	fmt.Printf("Answer O2 in numerics %d co2 in numerics %d\n", oxygenNumberInt, co2NumberInt)
+	fmt.Printf("Answer O2 * co2 is %d", int64(oxygenNumberInt) * int64(co2NumberInt))
 
 }
 
@@ -63,7 +65,7 @@ func calculateTendency(numbersArray map[string]bool, dominantValue int, chooseLe
 			tendency[i] = dominantValue
 			continue
 		}
-		
+
 		if chooseLeast {
 			tendency[i] = flipNumber(tendency[i])
 		}
