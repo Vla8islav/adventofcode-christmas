@@ -2,11 +2,12 @@ package day_04
 
 import (
 	"bufio"
-	"christmas-challenge/helpers"
 	"os"
 	"strconv"
 	"strings"
 )
+
+const crossedOutMarker = -1
 
 func readDataIntoStringArray(rawDataFilename string) []string {
 	arrayOfValues := make([]string, 0)
@@ -58,7 +59,7 @@ func dashboardStringsToNumbers(dashboardStringsArray [][]string) [][][]int {
 	return retval
 }
 
-func transpose(bingoBoard [][]int) [][]int{
+func transpose(bingoBoard [][]int) [][]int {
 	colLen := len(bingoBoard)
 	if colLen == 0 {
 		return nil
@@ -66,22 +67,22 @@ func transpose(bingoBoard [][]int) [][]int{
 	rowLen := len(bingoBoard[0])
 
 	retval := make([][]int, rowLen)
-	for i := range retval{
+	for i := range retval {
 		retval[i] = make([]int, colLen)
 	}
 
-	for i := 0; i < colLen; i++{
-		for j := 0; j < rowLen; j++{
+	for i := 0; i < colLen; i++ {
+		for j := 0; j < rowLen; j++ {
 			retval[i][j] = bingoBoard[j][i]
 		}
 	}
 	return retval
 }
 
-func transposeAll(bingoBoards [][][]int) [][][]int{
+func transposeAll(bingoBoards [][][]int) [][][]int {
 	boardsNumber := len(bingoBoards)
 	retval := make([][][]int, boardsNumber)
-	for i := range bingoBoards{
+	for i := range bingoBoards {
 		retval[i] = transpose(bingoBoards[i])
 	}
 	return retval
@@ -91,22 +92,88 @@ func addNumberToRows(dashboardsInt [][][]int, selectedRows [][][]int) {
 
 }
 
+func numbersStringToIntArray(numbersString string) []int {
+	var retval []int
+	numberStrings := strings.Split(numbersString, ",")
+	for _, numberString := range numberStrings {
+		numberToAppend, error := strconv.Atoi(numberString)
+		if error == nil {
+			retval = append(retval, numberToAppend)
+		}
+	}
+	return retval
+
+}
+
 func RunDay04() {
 	rawDataFilename := "day_04.txt"
-	helpers.GetRawDataFromWeb(rawDataFilename, "https://adventofcode.com/2021/day/4/input")
+	// helpers.GetRawDataFromWeb(rawDataFilename, "https://adventofcode.com/2021/day/4/input")
 	dataArray := readDataIntoStringArray(rawDataFilename)
 	numbersString := extractNumbersString(dataArray)
 	bingoBoardStringsArray := extractDashboardsStrings(dataArray)
 
 	dashboardsRowsInt := dashboardStringsToNumbers(bingoBoardStringsArray)
-
 	// dashboardsColsInt := transposeAll(dashboardsRowsInt)
-	
 
+	numbersToCross := numbersStringToIntArray(numbersString)
 
+	var sumOfUnmarkedNumbers int
+	for _, numberToCross := range numbersToCross {
+		for i := 0; i < len(dashboardsRowsInt); i++ {
+			// currentDashboard := dashboardsRowsInt[i]
+			crossNumber(dashboardsRowsInt[i], numberToCross)
+			if hasCrossedOutRow(dashboardsRowsInt[i]) {
+				println(numberToCross)
+				sumOfUnmarkedNumbers = calculateSumOfUnmarkedNumbers(dashboardsRowsInt[0])
+				break
+			}
+		}
+	}
 
 	println(numbersString)
 	println(bingoBoardStringsArray)
 	println(dashboardsRowsInt)
+	println(numbersToCross)
+	println(sumOfUnmarkedNumbers)
 	// println(dashboardsColsInt)
+}
+
+func calculateSumOfUnmarkedNumbers(bingoBoard [][]int) int {
+	var retval int
+	for _, bingoRow := range bingoBoard {
+		for _, number := range bingoRow {
+			if number != crossedOutMarker {
+				retval += number
+			}
+		}
+	}
+	return retval
+}
+
+func hasCrossedOutRow(bingoBoard [][]int) bool {
+	for _, bingoRow := range bingoBoard {
+		if isCrossedOut(bingoRow) {
+			return true
+		}
+	}
+	return false
+}
+
+func isCrossedOut(bingoRow []int) bool {
+	for _, number := range bingoRow {
+		if number != crossedOutMarker {
+			return false
+		}
+	}
+	return true
+}
+
+func crossNumber(bingoBoard [][]int, numberToCross int) {
+	for i, bingoRow := range bingoBoard {
+		for j, number := range bingoRow {
+			if number == numberToCross {
+				bingoBoard[i][j] = crossedOutMarker
+			}
+		}
+	}
 }
