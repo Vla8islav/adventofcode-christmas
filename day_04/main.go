@@ -113,29 +113,53 @@ func RunDay04() {
 	bingoBoardStringsArray := extractDashboardsStrings(dataArray)
 
 	dashboardsRowsInt := dashboardStringsToNumbers(bingoBoardStringsArray)
-	// dashboardsColsInt := transposeAll(dashboardsRowsInt)
 
 	numbersToCross := numbersStringToIntArray(numbersString)
 
 	var sumOfUnmarkedNumbers int
+	var lastNumber int
+
+
 	for _, numberToCross := range numbersToCross {
+		lastNumber = numberToCross
+		var crossedOutRowFlag bool
 		for i := 0; i < len(dashboardsRowsInt); i++ {
-			// currentDashboard := dashboardsRowsInt[i]
-			crossNumber(dashboardsRowsInt[i], numberToCross)
-			if hasCrossedOutRow(dashboardsRowsInt[i]) {
-				println(numberToCross)
-				sumOfUnmarkedNumbers = calculateSumOfUnmarkedNumbers(dashboardsRowsInt[0])
+			currentDashboard := dashboardsRowsInt[i]
+			crossNumber(currentDashboard, numberToCross)
+			crossedOutRowFlag, sumOfUnmarkedNumbers = getSumOfUnmarkedNumbers(currentDashboard, numberToCross)
+			if crossedOutRowFlag{
+				break
+			}
+			dashboardsColsInt := transposeAll(dashboardsRowsInt)
+			currentDashboardCols := dashboardsColsInt[i]
+			crossedOutRowFlag, sumOfUnmarkedNumbers = getSumOfUnmarkedNumbers(currentDashboardCols, numberToCross)
+			if crossedOutRowFlag{
 				break
 			}
 		}
+		if crossedOutRowFlag{
+			break
+		}
 	}
+	result := sumOfUnmarkedNumbers * lastNumber
 
 	println(numbersString)
 	println(bingoBoardStringsArray)
 	println(dashboardsRowsInt)
 	println(numbersToCross)
 	println(sumOfUnmarkedNumbers)
+	println(result)
+	
 	// println(dashboardsColsInt)
+}
+
+func getSumOfUnmarkedNumbers(currentDashboard [][]int, numberToCross int) (bool, int) {
+	if hasCrossedOutRow(currentDashboard) {
+		println(numberToCross)
+		sumOfUnmarkedNumbers := calculateSumOfUnmarkedNumbers(currentDashboard)
+		return true, sumOfUnmarkedNumbers
+	}
+	return false, 0
 }
 
 func calculateSumOfUnmarkedNumbers(bingoBoard [][]int) int {
