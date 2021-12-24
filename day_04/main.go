@@ -116,40 +116,47 @@ func RunDay04() {
 
 	numbersToCross := numbersStringToIntArray(numbersString)
 
-	var sumOfUnmarkedNumbers int
-	var lastNumber int
-
+	winningBoards := make(map[int]int, 0)
+	var winningBoardsOrder []int
 
 	for _, numberToCross := range numbersToCross {
-		lastNumber = numberToCross
-		var crossedOutRowFlag bool
 		for i := 0; i < len(dashboardsRowsInt); i++ {
 			currentDashboard := dashboardsRowsInt[i]
 			crossNumber(currentDashboard, numberToCross)
-			crossedOutRowFlag, sumOfUnmarkedNumbers = getSumOfUnmarkedNumbers(currentDashboard, numberToCross)
-			if crossedOutRowFlag{
-				break
+		}
+		for i := 0; i < len(dashboardsRowsInt); i++ {
+			if _, present := winningBoards[i]; present{
+				continue
 			}
+			currentDashboard := dashboardsRowsInt[i]
+			var sumOfUnmarkedNumbers int
+			crossedOutRowFlag, sumOfUnmarkedNumbersRow := getSumOfUnmarkedNumbers(currentDashboard, numberToCross)
 			dashboardsColsInt := transposeAll(dashboardsRowsInt)
 			currentDashboardCols := dashboardsColsInt[i]
-			crossedOutRowFlag, sumOfUnmarkedNumbers = getSumOfUnmarkedNumbers(currentDashboardCols, numberToCross)
+			var crossedOutColFlag bool
+			crossedOutColFlag, sumOfUnmarkedNumbersCol := getSumOfUnmarkedNumbers(currentDashboardCols, numberToCross)
 			if crossedOutRowFlag{
-				break
+				sumOfUnmarkedNumbers = sumOfUnmarkedNumbersRow
+			}
+			if crossedOutColFlag{
+				sumOfUnmarkedNumbers = sumOfUnmarkedNumbersCol
+			}
+
+			if crossedOutRowFlag || crossedOutColFlag {
+				winningBoards[i] = sumOfUnmarkedNumbers * numberToCross
+				winningBoardsOrder = append(winningBoardsOrder, i)
 			}
 		}
-		if crossedOutRowFlag{
-			break
-		}
 	}
-	result := sumOfUnmarkedNumbers * lastNumber
+	lastWinningBoardIndex := winningBoardsOrder[len(winningBoardsOrder)-1]
+	result := winningBoards[lastWinningBoardIndex]
 
 	println(numbersString)
 	println(bingoBoardStringsArray)
 	println(dashboardsRowsInt)
 	println(numbersToCross)
-	println(sumOfUnmarkedNumbers)
 	println(result)
-	
+
 	// println(dashboardsColsInt)
 }
 
