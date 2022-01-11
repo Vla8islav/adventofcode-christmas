@@ -16,8 +16,10 @@ type Line struct{
 	end Point
 }
 
+var startPoint Point = Point{0, 0}
+
 func RunDay05() {
-	rawDataFilename := "day_05.txt"
+	rawDataFilename := "day_05_example.txt"
 	// helpers.GetRawDataFromWeb(rawDataFilename, "https://adventofcode.com/2021/day/5/input")
 	linesList := readDataIntoLinesList(rawDataFilename)
 	overallPointsList := make([]Point, 0)
@@ -43,7 +45,55 @@ func RunDay05() {
 			moreThanOneIntersectionCounter++
 		}
 	}
+	resultField := getResult(pointsFrequency)
+	printResult(rawDataFilename + "_my_output.txt", resultField)
 	println(moreThanOneIntersectionCounter)
+}
+
+func printResult(resultFileName string, field [][]int) {
+	resultFile, err := os.OpenFile(resultFileName, os.O_CREATE|os.O_WRONLY, 0644)
+	if nil == err {
+		writer := bufio.NewWriter(resultFile)
+		for _, row := range field{
+			for _, freq := range row{
+				if freq == 0{
+					fmt.Fprintf(writer, ".")
+
+				}else{
+					fmt.Fprintf(writer, "%d", freq)
+				}
+			}
+			fmt.Fprintf(writer, "\n")
+		}
+		writer.Flush()
+		resultFile.Close()
+	}
+
+}
+
+func findLowerRightPoint(pointsFrequency map[Point]int)Point{
+	var x, y int
+	for key, _ := range pointsFrequency{
+		if x < key.x{
+			x = key.x
+		}
+		if y < key.y{
+			y = key.y
+		}
+	}
+	return Point{x, y}
+}
+
+func getResult(pointsFrequency map[Point]int)[][]int{
+	lowerRightPoint := findLowerRightPoint(pointsFrequency)
+	var field = make([][]int, lowerRightPoint.y + 1)
+	for i:=0;i<=lowerRightPoint.y;i++{
+		field[i] = make([]int, lowerRightPoint.x + 1)
+	}
+	for point, frequency := range pointsFrequency{
+		field[point.y][point.x] = frequency
+	}
+	return field
 }
 
 func getPointsInLine(line Line)[]Point {
