@@ -98,9 +98,8 @@ func getResult(pointsFrequency map[Point]int)[][]int{
 
 func getPointsInLine(line Line)[]Point {
 	endMatchesStartX := line.end.x == line.start.x
-	endMatchesStartY := line.end.y == line.start.y
 	
-	if !endMatchesStartX && !endMatchesStartY{
+	if !endMatchesStartX{
 		points := calculateDiagonalLinePoints(line)
 		return points
 //		panic("at least one of the coordinates must match because the line must be straight")
@@ -118,21 +117,6 @@ func getPointsInLine(line Line)[]Point {
 		}
 		for i := minValue; i <= maxValue; i++{
 			points = append(points, Point{line.start.x, i})
-		} 
-	}
-
-	if endMatchesStartY{
-		minValue := line.start.x
-		if minValue > line.end.x{
-			minValue = line.end.x
-		}
-
-		maxValue := line.end.x
-		if maxValue < line.start.x{
-			maxValue = line.start.x
-		}
-		for i := minValue; i <= maxValue; i++{
-			points = append(points, Point{i, line.end.y})
 		} 
 	}
 
