@@ -19,7 +19,7 @@ type Line struct{
 var startPoint Point = Point{0, 0}
 
 func RunDay05() {
-	rawDataFilename := "day_05_example.txt"
+	rawDataFilename := "day_05.txt"
 	// helpers.GetRawDataFromWeb(rawDataFilename, "https://adventofcode.com/2021/day/5/input")
 	linesList := readDataIntoLinesList(rawDataFilename)
 	overallPointsList := make([]Point, 0)
@@ -99,6 +99,7 @@ func getResult(pointsFrequency map[Point]int)[][]int{
 func getPointsInLine(line Line)[]Point {
 	endMatchesStartX := line.end.x == line.start.x
 	endMatchesStartY := line.end.y == line.start.y
+	
 	if !endMatchesStartX && !endMatchesStartY{
 		points := calculateDiagonalLinePoints(line)
 		return points
@@ -133,7 +134,7 @@ func getPointsInLine(line Line)[]Point {
 		for i := minValue; i <= maxValue; i++{
 			points = append(points, Point{i, line.end.y})
 		} 
-	€€}
+	}
 
 	return points
 }
@@ -141,25 +142,49 @@ func getPointsInLine(line Line)[]Point {
 
 func calculateDiagonalLinePoints(line Line)[]Point {
 	slope := float64(line.start.y - line.end.y) / float64(line.start.x - line.end.x)
+	b := float64(line.start.y) - float64(line.start.x) * slope
+
 	retval := make([]Point, 0)
-	if line.start.x <= line.end.x && line.start.y <= line.end.y{
-		// left-to-right, up-to-down
-		for i := line.start.x; i <= line.end.x; i++{
-			shift := i - line.start.x
-			retval = append(retval, Point{line.start.x+shift, line.start.y+shift})
-		}
-	}
-
-	if line.start.x > line.end.x && line.start.y > line.end.y{
-		// right-to-left, down-to-up
-		for i := line.end.x; i <= line.start.x; i++{
-			shift := i - line.end.x
-			retval = append(retval, Point{line.start.x-shift, line.start.y+shift})
-		}
-
+	xLeft := getMinX(line)
+	xRight := getMaxX(line)
+	for x := xLeft; x <= xRight; x++{
+		y := slope * float64(x) + float64(b)
+		retval = append(retval, Point{int(x), int(y)})
 	}
 	return retval
 
+}
+
+func getMinX(line Line)int {
+	retval := line.start.x
+	if retval > line.end.x{
+		retval = line.end.x
+	}
+	return retval
+}
+
+func getMaxX(line Line)int {
+	retval := line.start.x
+	if retval < line.end.x{
+		retval = line.end.x
+	}
+	return retval
+}
+
+func getMinY(line Line)int {
+	retval := line.start.y
+	if retval > line.end.y{
+		retval = line.end.y
+	}
+	return retval
+}
+
+func getMaxY(line Line)int {
+	retval := line.start.y
+	if retval < line.end.y{
+		retval = line.end.y
+	}
+	return retval
 }
 
 func readDataIntoLinesList(rawDataFilename string) []Line {
