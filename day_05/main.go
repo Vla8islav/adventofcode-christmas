@@ -100,7 +100,8 @@ func getPointsInLine(line Line)[]Point {
 	endMatchesStartX := line.end.x == line.start.x
 	endMatchesStartY := line.end.y == line.start.y
 	if !endMatchesStartX && !endMatchesStartY{
-		return []Point{}
+		points := calculateDiagonalLinePoints(line)
+		return points
 //		panic("at least one of the coordinates must match because the line must be straight")
 	}
 	points := make([]Point, 0)
@@ -112,7 +113,7 @@ func getPointsInLine(line Line)[]Point {
 
 		maxValue := line.end.y
 		if maxValue < line.start.y{
-			minValue = line.start.y
+			maxValue = line.start.y
 		}
 		for i := minValue; i <= maxValue; i++{
 			points = append(points, Point{line.start.x, i})
@@ -127,14 +128,38 @@ func getPointsInLine(line Line)[]Point {
 
 		maxValue := line.end.x
 		if maxValue < line.start.x{
-			minValue = line.start.x
+			maxValue = line.start.x
 		}
 		for i := minValue; i <= maxValue; i++{
 			points = append(points, Point{i, line.end.y})
 		} 
-	}
+	€€}
 
 	return points
+}
+
+
+func calculateDiagonalLinePoints(line Line)[]Point {
+	slope := float64(line.start.y - line.end.y) / float64(line.start.x - line.end.x)
+	retval := make([]Point, 0)
+	if line.start.x <= line.end.x && line.start.y <= line.end.y{
+		// left-to-right, up-to-down
+		for i := line.start.x; i <= line.end.x; i++{
+			shift := i - line.start.x
+			retval = append(retval, Point{line.start.x+shift, line.start.y+shift})
+		}
+	}
+
+	if line.start.x > line.end.x && line.start.y > line.end.y{
+		// right-to-left, down-to-up
+		for i := line.end.x; i <= line.start.x; i++{
+			shift := i - line.end.x
+			retval = append(retval, Point{line.start.x-shift, line.start.y+shift})
+		}
+
+	}
+	return retval
+
 }
 
 func readDataIntoLinesList(rawDataFilename string) []Line {
