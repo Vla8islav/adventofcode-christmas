@@ -1,8 +1,10 @@
 package main
 
 import (
-	"testing"
 	. "christmas-challenge/day_06"
+	"strconv"
+	"strings"
+	"testing"
 )
 var fishtests = []struct {
     in  Fish
@@ -48,6 +50,41 @@ func TestFishBehaviour(t *testing.T){
             if tt.in.String() != tt.out{
                 t.Errorf("Fish(%d) \nexpect\t%s\t\nretval\t%s",
                     tt.in.Day, tt.out, tt.in.String())
+
+            }
+        })
+    }
+}
+
+func toFlockOfFish(fishString string)FlockOfFish{
+    retval := make([]Fish, 0)
+    for _, strNum := range strings.Split(fishString, ","){
+        strNum = strings.TrimSpace(strNum)
+        i, e := strconv.Atoi(strNum)
+        if e == nil {
+            retval = append(retval, Fish{Day: i})
+        }
+    }
+    return FlockOfFish{retval}
+}
+
+var flockOfFishtests = []struct {
+    inDay int 
+    inFlock FlockOfFish
+    out FlockOfFish
+}{
+    {0, toFlockOfFish("3,4,3,1,2"), toFlockOfFish("3,4,3,1,2")},
+    {1, toFlockOfFish("3,4,3,1,2"), toFlockOfFish("2,3,2,0,1")},
+}
+
+func TestFlockOfFishBehaviour(t *testing.T){
+    for _, tt := range flockOfFishtests {
+        t.Run(tt.inFlock.String()+ "|||" +tt.out.String(), func(t *testing.T) {
+            result := tt.inFlock.Simulate(tt.inDay)
+            if result.String() != tt.out.String(){
+                t.Errorf("\nin\t%s\tday %d\n\nex\t%s\ngt\t%s\n",
+                    tt.inFlock.String(), tt.inDay, 
+                    tt.out.String(), result.String())
 
             }
         })

@@ -3,6 +3,7 @@ package day_06
 import (
 	"christmas-challenge/helpers"
 	"fmt"
+	"sort"
 )
 const FIRST_CYCLE_COUNTER = 8
 const NTH_CYCLE_COUNTER = 6
@@ -13,18 +14,35 @@ type Fish struct{
 
 type FlockOfFish struct{
 	State []Fish
-	Day int
 }
 
-func (fl FlockOfFish) simulate(day int){
-	for i:=0;i<=fl.Day;i++{
-		fl.State = fl.nextDay()
+func (fl FlockOfFish) Simulate(day int)FlockOfFish{
+	currentState := fl.State
+	for i:=0;i<day;i++{
+		currentState = nextDay(currentState)
 	}
+	return FlockOfFish{currentState}
 }
 
-func (fl FlockOfFish) nextDay() []Fish{
-	newState := make([]Fish, 0)
+func (fl FlockOfFish) String() string{
+	s := make([]int, 0)
 	for _, f := range fl.State{
+		s = append(s, f.getTimer())
+	}
+	sort.Ints(s)
+	retval := ""
+	for i, f := range s{
+		retval += fmt.Sprintf("%d", f)
+		if i < len(s) - 1{
+			retval += ","
+		}
+	}
+	return retval
+}
+
+func nextDay(initialState []Fish)[]Fish{
+	newState := make([]Fish, 0)
+	for _, f := range initialState{
 		newFish := Fish{f.Day + 1}
 		newState = append(newState, newFish)
 		if f.getCycle() < newFish.getCycle(){
