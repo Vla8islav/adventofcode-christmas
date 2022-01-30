@@ -3,6 +3,7 @@ package main
 import (
 	. "christmas-challenge/day_06"
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 	"testing"
@@ -85,6 +86,16 @@ func getDiffFromTwoStringsWithNumbers(s1 string, s2 string) string{
     }
 }
 
+func sortNumbersString(s string)string{
+    retval := ""
+    ns := convertToNumbersSlice(s)
+    sort.Ints(ns)
+    for _, n := range ns{
+        retval += fmt.Sprintf("%d,", n)
+    }
+    return retval
+}
+
 func printNumbersInFirstButNotInSecond(f1 map[int]int, f2 map[int]int) string{
     deltaF1F2 := ""
     for f1val, f1freq := range f1{
@@ -164,7 +175,7 @@ func TestFlockOfFishBehaviour(t *testing.T){
             if compareResult != ""{
                 t.Errorf("\nin\t%s\tday %d\n\nex\t%s\ngt\t%s\n%s\n",
                     tt.inFlock.String(), tt.inDay, 
-                    tt.out, result.String(), compareResult)
+                    sortNumbersString(tt.out), sortNumbersString(result.String()), compareResult)
                 // t.Errorf("\nin\t%s\tday %d\n\nex\t%s\ngt\t%s\n",
                 //     tt.inFlock.String(), tt.inDay, 
                 //     tt.out, result.String())

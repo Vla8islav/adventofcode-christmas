@@ -52,12 +52,12 @@ func nextDay(initialState []Fish)[]Fish{
 }
 
 func (f Fish) getCycle() int{
-	nthCyclePart := f.Day - FIRST_CYCLE_COUNTER
-	if nthCyclePart <= 0{
+	nthCyclePart := f.Day - FIRST_CYCLE_COUNTER - 1
+	if nthCyclePart < 0{
 		return 0
 	}else
 	{
-		return 1 + (nthCyclePart / (NTH_CYCLE_COUNTER + 1 + 1))
+		return 1 + (nthCyclePart / (NTH_CYCLE_COUNTER + 1))
 	}
 }
 
@@ -80,6 +80,7 @@ func RunDay06() {
 	const sliceSize = 3
 	rawDataFilename := "day_06.txt"
 	helpers.GetRawDataFromWeb(rawDataFilename, "https://adventofcode.com/2021/day/6/input")
+	
 }
 
 func GetStateDayX(initialState []Fish, day int) []Fish{
