@@ -3,7 +3,6 @@ package day_06
 import (
 	"christmas-challenge/helpers"
 	"fmt"
-	"sort"
 )
 const FIRST_CYCLE_COUNTER = 8
 const NTH_CYCLE_COUNTER = 6
@@ -29,7 +28,7 @@ func (fl FlockOfFish) String() string{
 	for _, f := range fl.State{
 		s = append(s, f.getTimer())
 	}
-	sort.Ints(s)
+	// sort.Ints(s)
 	retval := ""
 	for i, f := range s{
 		retval += fmt.Sprintf("%d", f)
