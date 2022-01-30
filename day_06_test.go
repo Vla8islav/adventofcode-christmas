@@ -58,18 +58,6 @@ func TestFishBehaviour(t *testing.T){
     }
 }
 
-func toFlockOfFish(fishTimeToGestationString string)FlockOfFish{
-    // we assume that all fish in the zeroth cycle in the initial state
-    retval := make([]Fish, 0)
-    for _, strNum := range strings.Split(fishTimeToGestationString, ","){
-        strNum = strings.TrimSpace(strNum)
-        i, e := strconv.Atoi(strNum)
-        if e == nil {
-            retval = append(retval, Fish{Day: FIRST_CYCLE_COUNTER - i})
-        }
-    }
-    return FlockOfFish{State:retval}
-}
 
 func getDiffFromTwoStringsWithNumbers(s1 string, s2 string) string{
     a1 := convertToNumbersSlice(s1)
@@ -145,25 +133,25 @@ var flockOfFishtests = []struct {
     inFlock FlockOfFish
     out string
 }{
-{0, toFlockOfFish("3,4,3,1,2"), "3,4,3,1,2"},
-{1, toFlockOfFish("3,4,3,1,2"), "2,3,2,0,1"},
-{2, toFlockOfFish("3,4,3,1,2"), "1,2,1,6,0,8"},
-{3, toFlockOfFish("3,4,3,1,2"), "0,1,0,5,6,7,8"},
-{4, toFlockOfFish("3,4,3,1,2"), "6,0,6,4,5,6,7,8,8"},
-{5, toFlockOfFish("3,4,3,1,2"), "5,6,5,3,4,5,6,7,7,8"},
-{6, toFlockOfFish("3,4,3,1,2"), "4,5,4,2,3,4,5,6,6,7"},
-{7, toFlockOfFish("3,4,3,1,2"), "3,4,3,1,2,3,4,5,5,6"},
-{8, toFlockOfFish("3,4,3,1,2"), "2,3,2,0,1,2,3,4,4,5"},
-{9, toFlockOfFish("3,4,3,1,2"), "1,2,1,6,0,1,2,3,3,4,8"},
-{10, toFlockOfFish("3,4,3,1,2"), "0,1,0,5,6,0,1,2,2,3,7,8"},
-{11, toFlockOfFish("3,4,3,1,2"), "6,0,6,4,5,6,0,1,1,2,6,7,8,8,8"},
-{12, toFlockOfFish("3,4,3,1,2"), "5,6,5,3,4,5,6,0,0,1,5,6,7,7,7,8,8"},
-{13, toFlockOfFish("3,4,3,1,2"), "4,5,4,2,3,4,5,6,6,0,4,5,6,6,6,7,7,8,8"},
-{14, toFlockOfFish("3,4,3,1,2"), "3,4,3,1,2,3,4,5,5,6,3,4,5,5,5,6,6,7,7,8"},
-{15, toFlockOfFish("3,4,3,1,2"), "2,3,2,0,1,2,3,4,4,5,2,3,4,4,4,5,5,6,6,7"},
-{16, toFlockOfFish("3,4,3,1,2"), "1,2,1,6,0,1,2,3,3,4,1,2,3,3,3,4,4,5,5,6,8"},
-{17, toFlockOfFish("3,4,3,1,2"), "0,1,0,5,6,0,1,2,2,3,0,1,2,2,2,3,3,4,4,5,7,8"},
-{18, toFlockOfFish("3,4,3,1,2"), "6,0,6,4,5,6,0,1,1,2,6,0,1,1,1,2,2,3,3,4,6,7,8,8,8,8"},
+{0, ToFlockOfFish("3,4,3,1,2"), "3,4,3,1,2"},
+{1, ToFlockOfFish("3,4,3,1,2"), "2,3,2,0,1"},
+{2, ToFlockOfFish("3,4,3,1,2"), "1,2,1,6,0,8"},
+{3, ToFlockOfFish("3,4,3,1,2"), "0,1,0,5,6,7,8"},
+{4, ToFlockOfFish("3,4,3,1,2"), "6,0,6,4,5,6,7,8,8"},
+{5, ToFlockOfFish("3,4,3,1,2"), "5,6,5,3,4,5,6,7,7,8"},
+{6, ToFlockOfFish("3,4,3,1,2"), "4,5,4,2,3,4,5,6,6,7"},
+{7, ToFlockOfFish("3,4,3,1,2"), "3,4,3,1,2,3,4,5,5,6"},
+{8, ToFlockOfFish("3,4,3,1,2"), "2,3,2,0,1,2,3,4,4,5"},
+{9, ToFlockOfFish("3,4,3,1,2"), "1,2,1,6,0,1,2,3,3,4,8"},
+{10, ToFlockOfFish("3,4,3,1,2"), "0,1,0,5,6,0,1,2,2,3,7,8"},
+{11, ToFlockOfFish("3,4,3,1,2"), "6,0,6,4,5,6,0,1,1,2,6,7,8,8,8"},
+{12, ToFlockOfFish("3,4,3,1,2"), "5,6,5,3,4,5,6,0,0,1,5,6,7,7,7,8,8"},
+{13, ToFlockOfFish("3,4,3,1,2"), "4,5,4,2,3,4,5,6,6,0,4,5,6,6,6,7,7,8,8"},
+{14, ToFlockOfFish("3,4,3,1,2"), "3,4,3,1,2,3,4,5,5,6,3,4,5,5,5,6,6,7,7,8"},
+{15, ToFlockOfFish("3,4,3,1,2"), "2,3,2,0,1,2,3,4,4,5,2,3,4,4,4,5,5,6,6,7"},
+{16, ToFlockOfFish("3,4,3,1,2"), "1,2,1,6,0,1,2,3,3,4,1,2,3,3,3,4,4,5,5,6,8"},
+{17, ToFlockOfFish("3,4,3,1,2"), "0,1,0,5,6,0,1,2,2,3,0,1,2,2,2,3,3,4,4,5,7,8"},
+{18, ToFlockOfFish("3,4,3,1,2"), "6,0,6,4,5,6,0,1,1,2,6,0,1,1,1,2,2,3,3,4,6,7,8,8,8,8"},
 }
 
 func TestFlockOfFishBehaviour(t *testing.T){

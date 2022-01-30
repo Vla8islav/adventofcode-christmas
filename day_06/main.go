@@ -3,6 +3,8 @@ package day_06
 import (
 	"christmas-challenge/helpers"
 	"fmt"
+	"strconv"
+	"strings"
 )
 const FIRST_CYCLE_COUNTER = 8
 const NTH_CYCLE_COUNTER = 6
@@ -76,11 +78,29 @@ func (f Fish) String() string{
 	return fmt.Sprintf("day:%03d,cycle:%03d,timer:%d", f.Day, f.getCycle(),f.getTimer())
 }
 
+func ToFlockOfFish(fishTimeToGestationString string)FlockOfFish{
+    // we assume that all fish in the zeroth cycle in the initial state
+    retval := make([]Fish, 0)
+    for _, strNum := range strings.Split(fishTimeToGestationString, ","){
+        strNum = strings.TrimSpace(strNum)
+        i, e := strconv.Atoi(strNum)
+        if e == nil {
+            retval = append(retval, Fish{Day: FIRST_CYCLE_COUNTER - i})
+        }
+    }
+    return FlockOfFish{State:retval}
+}
+
 func RunDay06() {
 	const sliceSize = 3
 	rawDataFilename := "day_06.txt"
 	helpers.GetRawDataFromWeb(rawDataFilename, "https://adventofcode.com/2021/day/6/input")
-	
+	dataArray := helpers.ReadDataIntoStringArray(rawDataFilename)
+	inputString := dataArray[0]
+	flock := ToFlockOfFish(inputString)
+	const SIM_DAY = 80;
+	endResult := flock.Simulate(SIM_DAY)
+	fmt.Printf("Number of fish after %d day is %d", SIM_DAY, len(endResult.State))
 }
 
 func GetStateDayX(initialState []Fish, day int) []Fish{

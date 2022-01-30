@@ -1,16 +1,29 @@
 package helpers
 
 import (
+	"bufio"
 	"io"
 	"net/http"
 	"os"
 )
 
+func ReadDataIntoStringArray(rawDataFilename string) []string {
+	arrayOfValues := make([]string, 0)
+	rawDataFile, err := os.Open(rawDataFilename)
+	if nil == err {
+		scanner := bufio.NewScanner(rawDataFile)
+		for scanner.Scan() {
+			currentText := scanner.Text()
+			arrayOfValues = append(arrayOfValues, currentText)
+		}
+	}
+	return arrayOfValues
+}
 
 func GetRawDataFromWeb(rawDataFilename string, url string) {
 	client := &http.Client{}
 	req, _ := http.NewRequest("GET", url, nil)
-	req.Header.Set("cookie", "session=53616c7465645f5f6a5d552e712b707cdf60b99ae38583cfc51dbf519359b7597a3a35a925e91d934b334e8cbfc5b7af")
+	req.Header.Set("cookie", "session=53616c7465645f5f3e6a237738cf9405524959c89e3f151d5b03440ac23c3c58b680b58d4ba93aafdd8a1ea27dbfb4fe")
 	result, err := client.Do(req)
 
 	if err == nil {

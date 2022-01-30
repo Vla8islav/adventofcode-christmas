@@ -1,26 +1,13 @@
 package day_04
 
 import (
-	"bufio"
-	"os"
 	"strconv"
 	"strings"
+	"christmas-challenge/helpers"
 )
 
 const crossedOutMarker = -1
 
-func readDataIntoStringArray(rawDataFilename string) []string {
-	arrayOfValues := make([]string, 0)
-	rawDataFile, err := os.Open(rawDataFilename)
-	if nil == err {
-		scanner := bufio.NewScanner(rawDataFile)
-		for scanner.Scan() {
-			currentText := scanner.Text()
-			arrayOfValues = append(arrayOfValues, currentText)
-		}
-	}
-	return arrayOfValues
-}
 
 func extractNumbersString(dataArray []string) string {
 	return dataArray[0]
@@ -108,7 +95,7 @@ func numbersStringToIntArray(numbersString string) []int {
 func RunDay04() {
 	rawDataFilename := "day_04.txt"
 	// helpers.GetRawDataFromWeb(rawDataFilename, "https://adventofcode.com/2021/day/4/input")
-	dataArray := readDataIntoStringArray(rawDataFilename)
+	dataArray := helpers.ReadDataIntoStringArray(rawDataFilename)
 	numbersString := extractNumbersString(dataArray)
 	bingoBoardStringsArray := extractDashboardsStrings(dataArray)
 
