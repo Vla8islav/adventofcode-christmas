@@ -98,7 +98,7 @@ func RunDay06() {
 	dataArray := helpers.ReadDataIntoStringArray(rawDataFilename)
 	inputString := dataArray[0]
 	flock := ToFlockOfFish(inputString)
-	const SIM_DAY = 80;
+	const SIM_DAY = 256;
 	endResult := flock.Simulate(SIM_DAY)
 	fmt.Printf("Number of fish after %d day is %d", SIM_DAY, len(endResult.State))
 }
