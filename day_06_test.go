@@ -133,10 +133,10 @@ var flockOfFishtests = []struct {
     inFlock FlockOfFish
     out string
 }{
-{0, ToFlockOfFish("3,4,3,1,2"), "3,4,3,1,2"},
-{1, ToFlockOfFish("3,4,3,1,2"), "2,3,2,0,1"},
-{2, ToFlockOfFish("3,4,3,1,2"), "1,2,1,6,0,8"},
-{3, ToFlockOfFish("3,4,3,1,2"), "0,1,0,5,6,7,8"},
+// {0, ToFlockOfFish("3,4,3,1,2"), "3,4,3,1,2"},
+// {1, ToFlockOfFish("3,4,3,1,2"), "2,3,2,0,1"},
+// {2, ToFlockOfFish("3,4,3,1,2"), "1,2,1,6,0,8"},
+// {3, ToFlockOfFish("3,4,3,1,2"), "0,1,0,5,6,7,8"},
 {4, ToFlockOfFish("3,4,3,1,2"), "6,0,6,4,5,6,7,8,8"},
 {5, ToFlockOfFish("3,4,3,1,2"), "5,6,5,3,4,5,6,7,7,8"},
 {6, ToFlockOfFish("3,4,3,1,2"), "4,5,4,2,3,4,5,6,6,7"},
